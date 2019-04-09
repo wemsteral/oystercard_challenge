@@ -26,42 +26,49 @@ describe Oystercard do
     end
   end
 
-    # describe '#deduct' do
-    #   it 'deducts amount from balance' do
-    #     oyster = Oystercard.new
-    #     oyster.top_up(1)
-    #     expect(oyster.deduct(1)).to eq 0
-    #   end
-    # end
 
   #back to oystercard as a whole
       it 'is initially not in a journey' do
         expect(subject).not_to be_in_journey
       end
 
-      it 'can touch in' do
-        subject.top_up(10)
-        subject.touch_in
-        expect(subject).to be_in_journey
-      end
-
-      it 'can touch out' do
-        subject.top_up(10)
-        subject.touch_in
-        subject.touch_out
-        expect(subject).not_to be_in_journey
-      end
-
-      it 'deducts the fare when touch_out' do
-        subject.top_up(10)
-        subject.touch_in
-        expect{ subject.touch_out}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
-      end
+      #touch in
 
       describe '#touch_in' do
+        let(:station){ double :station }
+
+        it 'can touch in' do
+          subject.top_up(10)
+          subject.touch_in(station)
+          expect(subject).to be_in_journey
+        end
+
+        it 'stores the entry station' do
+          subject.top_up(10)
+          subject.touch_in(station)
+          expect(subject.entry_station).to eq station
+        end
+
+
         it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
-        expect { subject.touch_in }.to raise_error 'insufficient funds'
+        expect { subject.touch_in(station) }.to raise_error 'insufficient funds'
         end
       end
+   #touch out
+   describe '#touch_out' do
+     let(:station){ double :station }
+     it 'can touch out' do
+       subject.top_up(10)
+       subject.touch_in(station)
+       subject.touch_out
+       expect(subject).not_to be_in_journey
+     end
+
+     it 'deducts the fare when touch_out' do
+       subject.top_up(10)
+       subject.touch_in(station)
+       expect{ subject.touch_out}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
+     end
+   end
 
 end
