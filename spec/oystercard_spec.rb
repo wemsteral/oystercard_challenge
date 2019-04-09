@@ -26,13 +26,13 @@ describe Oystercard do
     end
   end
 
-    describe '#deduct' do
-      it 'deducts amount from balance' do
-        oyster = Oystercard.new
-        oyster.top_up(1)
-        expect(oyster.deduct(1)).to eq 0
-      end
-    end
+    # describe '#deduct' do
+    #   it 'deducts amount from balance' do
+    #     oyster = Oystercard.new
+    #     oyster.top_up(1)
+    #     expect(oyster.deduct(1)).to eq 0
+    #   end
+    # end
 
   #back to oystercard as a whole
       it 'is initially not in a journey' do
@@ -55,7 +55,7 @@ describe Oystercard do
       it 'deducts the fare when touch_out' do
         subject.top_up(10)
         subject.touch_in
-        expect{ subject.touch_out}.to change{ subject.balance }.by -1
+        expect{ subject.touch_out}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
       end
 
       describe '#touch_in' do
