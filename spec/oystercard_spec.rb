@@ -26,5 +26,13 @@ describe Oystercard do
     end
   end
 
+    describe '#deduct' do
+      it 'deducts amount from balance' do
+        oyster = Oystercard.new
+        oyster.top_up(1)
+        expect(oyster.deduct(1)).to eq 0
+      end
+    end
+
 
 end
