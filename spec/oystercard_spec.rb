@@ -34,5 +34,20 @@ describe Oystercard do
       end
     end
 
+  #back to oystercard as a whole
+      it 'is initially not in a journey' do
+        expect(subject).not_to be_in_journey
+      end
+
+      it 'can touch in' do
+        subject.touch_in
+        expect(subject).to be_in_journey
+      end
+
+      it 'can touch out' do
+        sunject.touch_in
+        subject.touch_out
+        expect(subject).not_to be_in_journey
+      end
 
 end
