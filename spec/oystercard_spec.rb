@@ -52,6 +52,12 @@ describe Oystercard do
         expect(subject).not_to be_in_journey
       end
 
+      it 'deducts the fare when touch_out' do
+        subject.top_up(10)
+        subject.touch_in
+        expect{ subject.touch_out}.to change{ subject.balance }.by -1
+      end
+
       describe '#touch_in' do
         it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
         expect { subject.touch_in }.to raise_error 'insufficient funds'
