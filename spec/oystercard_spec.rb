@@ -32,26 +32,30 @@ describe Oystercard do
         expect(subject).not_to be_in_journey
       end
 
+      it 'initially has an empty list of journeys' do
+        expect(subject.journeys).to be_empty
+      end 
+
       #touch in
 
       describe '#touch_in' do
-        let(:station){ double :station }
+        let(:entry_station){ double :station }
 
         it 'can touch in' do
           subject.top_up(10)
-          subject.touch_in(station)
+          subject.touch_in(entry_station)
           expect(subject).to be_in_journey
         end
 
         it 'stores the entry station' do
           subject.top_up(10)
-          subject.touch_in(station)
-          expect(subject.entry_station).to eq station
+          subject.touch_in(entry_station)
+          expect(subject.entry_station).to eq entry_station
         end
 
 
         it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
-        expect { subject.touch_in(station) }.to raise_error 'insufficient funds'
+        expect { subject.touch_in(entry_station) }.to raise_error 'insufficient funds'
         end
       end
 
@@ -59,25 +63,27 @@ describe Oystercard do
 
    describe '#touch_out' do
 
-     let(:station){ double :station }
+     let(:entry_station){ double :station }
+     let(:exit_station){ double :station }
+
      it 'can touch out' do
        subject.top_up(10)
-       subject.touch_in(station)
-       subject.touch_out(station)
+       subject.touch_in(entry_station)
+       subject.touch_out(exit_station)
        expect(subject).not_to be_in_journey
      end
 
      it 'deducts the fare when touch_out' do
        subject.top_up(10)
-       subject.touch_in(station)
-       expect{ subject.touch_out(station)}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
+       subject.touch_in(entry_station)
+       expect{ subject.touch_out(exit_station)}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
      end
 
      it 'saves exit station' do
-       subject.touch_out(station)
-       expect(subject.exit_station).to eq station
+       subject.top_up(10)
+       subject.touch_in(entry_station)
+       subject.touch_out(exit_station)
+       expect(subject.exit_station).to eq exit_station
      end
-
    end
-
 end

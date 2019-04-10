@@ -11,7 +11,7 @@ class Oystercard
 
   def initialize
     @balance = 0
-    @journeys = []
+    @journeys = {}
   end
 
   def top_up(amount)
@@ -20,30 +20,25 @@ class Oystercard
     @balance += amount
   end
 
-  private
-
-  def deduct(fare)
-    @balance -= fare
-  end
-
-  public
-
   def in_journey?
     !!entry_station
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     fail 'insufficient funds' if @balance < LOW_LIMIT
-    @entry_station = station
+    @entry_station = entry_station
   end
 
-  def touch_out(station)
+  def touch_out(exit_station)
     deduct(MINIMUM_CHARGE)
-
-    @exit_station = station
-    @journeys << [@entry_station,@exit_station]
+    @exit_station = exit_station
     @entry_station = nil
+  end
 
+  private
+
+  def deduct(fare)
+    @balance -= fare
   end
 
 end
