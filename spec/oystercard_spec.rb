@@ -12,10 +12,6 @@ describe Oystercard do
     it { is_expected.to respond_to(:top_up).with(1).argument }
 
     it 'tops up an oystercard from 0 to 1' do
-    # Our first test:
-      # subject.top_up(1)
-      # expect(subject.balance).to eq 1
-    # This test will pass regardless of @balance's initial value:
       expect{ subject.top_up 1 }.to change{ subject.balance }.by 1
     end
 
@@ -28,36 +24,38 @@ describe Oystercard do
 
 
     #back to oystercard as a whole
+    describe '#initialize' do
       it 'is initially not in a journey' do
         expect(subject).not_to be_in_journey
       end
 
       it 'initially has an empty list of journeys' do
         expect(subject.journeys).to be_empty
-      end 
+      end
+    end
 
       #touch in
 
-      describe '#touch_in' do
-        let(:entry_station){ double :station }
+    describe '#touch_in' do
+      let(:entry_station){ double :station }
 
-        it 'can touch in' do
-          subject.top_up(10)
-          subject.touch_in(entry_station)
-          expect(subject).to be_in_journey
-        end
-
-        it 'stores the entry station' do
-          subject.top_up(10)
-          subject.touch_in(entry_station)
-          expect(subject.entry_station).to eq entry_station
-        end
-
-
-        it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
-        expect { subject.touch_in(entry_station) }.to raise_error 'insufficient funds'
-        end
+      it 'can touch in' do
+        subject.top_up(10)
+        subject.touch_in(entry_station)
+        expect(subject).to be_in_journey
       end
+
+      it 'stores the entry station' do
+        subject.top_up(10)
+        subject.touch_in(entry_station)
+        expect(subject.entry_station).to eq entry_station
+      end
+
+
+      it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
+        expect { subject.touch_in(entry_station) }.to raise_error 'insufficient funds'
+      end
+    end
 
    #touch out
 
@@ -85,5 +83,17 @@ describe Oystercard do
        subject.touch_out(exit_station)
        expect(subject.exit_station).to eq exit_station
      end
+
+     #journeys
+     let(:journey){{"entry_station" => entry_station, "exit_station" => exit_station}}
+     it 'saves a journey' do
+       subject.top_up(10)
+       subject.touch_in(entry_station)
+       subject.touch_out(exit_station)
+       expect(subject.journeys).to include journey
+
+     end
    end
+
+
 end
