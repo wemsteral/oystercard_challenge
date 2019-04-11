@@ -1,3 +1,5 @@
+require_relative 'journey'
+
 class Oystercard
 
   BALANCE_LIMIT = 90
@@ -20,15 +22,18 @@ class Oystercard
   def touch_in(entry_station)
     fail 'insufficient funds' if @balance < LOW_LIMIT
     @journey.start_journey(entry_station)
-    # @journey = {}
-    # @journey["entry_station"] = @entry_station
+
   end
 
   def touch_out(exit_station)
     deduct(MINIMUM_CHARGE)
     @journey.finish_journey(exit_station)
-    # @journey["exit_station"] = @exit_station
-    # @journey_history << @journey
+    add_journey
+  end
+
+  def add_journey
+    @full_journey = { :entry => @journey.entry_station , :exit => @journey.exit_station }
+    @journey_history << @full_journey
   end
 
   private

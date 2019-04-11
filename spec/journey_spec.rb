@@ -5,7 +5,7 @@ describe Journey do
   it 'is initially not in a journey' do
     expect(subject).not_to be_in_journey
   end
-  
+
   describe '#start_journey' do
     it 'save station as entry station' do
       subject.start_journey(:station)

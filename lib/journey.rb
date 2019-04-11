@@ -1,3 +1,5 @@
+require_relative 'oystercard'
+
 class Journey
   attr_reader :entry_station, :exit_station
 
@@ -12,5 +14,6 @@ class Journey
   def in_journey?
     !!entry_station
   end
+
 
 end
