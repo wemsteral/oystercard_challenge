@@ -4,10 +4,7 @@ class Oystercard
   LOW_LIMIT = 1
   MINIMUM_CHARGE = 1
 
-  attr_reader :balance
-  attr_reader :entry_station
-  attr_reader :exit_station
-  attr_reader :journeys
+  attr_reader :balance, :journey_history
 
   def initialize
     @balance = 0
@@ -32,7 +29,6 @@ class Oystercard
     @journey.finish_journey(exit_station)
     # @journey["exit_station"] = @exit_station
     # @journey_history << @journey
-    @entry_station = nil
   end
 
   private
