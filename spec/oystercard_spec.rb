@@ -23,7 +23,6 @@ describe Oystercard do
     end
   end
 
-
     #back to oystercard as a whole
     describe '#initialize' do
 
@@ -35,20 +34,13 @@ describe Oystercard do
       #touch in
 
     describe '#touch_in' do
-      let(:entry_station){ double :station }
+      let(:entry_station){ double (:station) }
 
-      # it 'can touch in' do
-      #   subject.top_up(10)
-      #   subject.touch_in(:entry_station)
-      #   journey = Journey.new
-      #   expect(journey.start_journey(:station)).to eq :entry_station
-      # end
-
-      # it 'stores the entry station' do
-      #   subject.top_up(10)
-      #   subject.touch_in(entry_station)
-      #   expect(subject.entry_station).to eq entry_station
-      # end
+      it 'charges penalty fare if touched in twice' do
+        subject.top_up(10)
+        subject.touch_in(entry_station)
+        expect { subject.touch_in(entry_station) }.to change {subject.balance }.by -(Journey::PENALTY_FARE)
+      end
 
 
       it "raises an error if balance is less than #{Oystercard::LOW_LIMIT}" do
@@ -73,7 +65,12 @@ describe Oystercard do
      it 'deducts the fare when touch_out' do
        subject.top_up(10)
        subject.touch_in(entry_station)
-       expect{ subject.touch_out(exit_station)}.to change{ subject.balance }.by -(Oystercard::MINIMUM_CHARGE)
+       expect{ subject.touch_out(exit_station)}.to change{ subject.balance }.by -(Journey::MINIMUM_FARE)
+     end
+
+     it 'deducts penalty fare if not touched in' do
+       subject.top_up(10)
+       expect{ subject.touch_out(exit_station)}.to change{ subject.balance }.by -(Journey::PENALTY_FARE)
      end
 
      # it 'saves exit station' do
@@ -84,7 +81,7 @@ describe Oystercard do
      # end
 
      #journeys
-     
+
      let(:journey){{ :entry => entry_station , :exit => exit_station }}
      it 'saves a journey' do
        subject.top_up(10)
